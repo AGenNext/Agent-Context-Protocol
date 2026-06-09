@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AGenNext/Agent-Context-Protocol/CONTEXT-PACKET.schema.json",
+  "title": "ACP Signed Just-In-Time Context Packet",
+  "type": "object",
+  "required": [
+    "type",
+    "version",
+    "packet_id",
+    "request_id",
+    "issued_at",
+    "expires_at",
+    "actor",
+    "agent",
+    "contract",
+    "scope",
+    "obligations",
+    "context",
+    "proof"
+  ],
+  "properties": {
+    "type": { "const": "acp.signed_jit_context_packet" },
+    "version": { "const": "0.1" },
+    "packet_id": { "type": "string", "minLength": 1 },
+    "request_id": { "type": "string", "minLength": 1 },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "actor": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "agent": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "runtime": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "contract": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "oneOf": [{ "type": "string" }, { "type": "number" }] }
+      },
+      "additionalProperties": true
+    },
+    "scope": {
+      "type": "object",
+      "required": ["tenant_id", "action", "target"],
+      "properties": {
+        "tenant_id": { "type": "string", "minLength": 1 },
+        "action": { "type": "string", "minLength": 1 },
+        "target": { "type": "object" },
+        "data": { "type": "object" },
+        "tools": { "type": "object" },
+        "memory": { "type": "object" }
+      },
+      "additionalProperties": true
+    },
+    "obligations": {
+      "type": "object",
+      "required": ["audit", "retention"],
+      "properties": {
+        "audit": { "type": "string" },
+        "redaction": { "type": "string" },
+        "approval": { "type": "string" },
+        "retention": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "context": {
+      "type": "object",
+      "required": ["records"],
+      "properties": {
+        "records": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "proof": {
+      "type": "object",
+      "required": ["alg", "kid", "signature"],
+      "properties": {
+        "alg": { "type": "string", "minLength": 1 },
+        "kid": { "type": "string", "minLength": 1 },
+        "signature": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
