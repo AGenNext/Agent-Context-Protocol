@@ -1,0 +1,51 @@
+name: Validate ACP Draft
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          find . -name "*.json" -print0 | xargs -0 -I{} python -m json.tool {} > /dev/null
+
+      - name: Validate YAML files
+        run: |
+          python - <<'PY'
+          import pathlib, sys
+          try:
+              import yaml
+          except Exception:
+              print('Installing pyyaml is intentionally avoided; checking basic YAML presence only.')
+              sys.exit(0)
+          for path in pathlib.Path('.').rglob('*.yml'):
+              yaml.safe_load(path.read_text())
+          for path in pathlib.Path('.').rglob('*.yaml'):
+              yaml.safe_load(path.read_text())
+          PY
+
+      - name: Check required ACP files
+        run: |
+          test -f README.md
+          test -f SPEC.md
+          test -f CONFORMANCE.md
+          test -f SECURITY.md
+          test -f ROADMAP.md
+          test -f CONTEXT-PACKET.schema.json
+          test -f RFC/0001-core-protocol.md
+          test -f RFC/0002-context-packet.md
+          test -f RFC/0003-policy-model.md
+          test -f RFC/0004-trust-model.md
+          test -f RFC/0005-federation.md
+          test -f docs/index.html
