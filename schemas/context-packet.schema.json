@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AGenNext/Agent-Context-Protocol/schemas/context-packet.schema.json",
+  "title": "ACP Context Packet",
+  "type": "object",
+  "required": [
+    "context_id",
+    "packet_type",
+    "actor",
+    "agent",
+    "tenant",
+    "contract",
+    "intent",
+    "action",
+    "target",
+    "allowed_actions",
+    "denied_actions",
+    "allowed_tools",
+    "denied_tools",
+    "allowed_data",
+    "denied_data",
+    "redacted_data",
+    "allowed_memory",
+    "denied_memory",
+    "time_window",
+    "obligations",
+    "proof"
+  ],
+  "properties": {
+    "context_id": { "type": "string", "minLength": 1 },
+    "packet_type": { "const": "signed_jit_context_packet" },
+    "actor": { "type": "string", "minLength": 1 },
+    "agent": { "type": "string", "minLength": 1 },
+    "tenant": { "type": "string", "minLength": 1 },
+    "contract": { "type": "string", "minLength": 1 },
+    "intent": { "type": "string", "minLength": 1 },
+    "action": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "allowed_actions": { "type": "array", "items": { "type": "string" } },
+    "denied_actions": { "type": "array", "items": { "type": "string" } },
+    "allowed_tools": { "type": "array", "items": { "type": "string" } },
+    "denied_tools": { "type": "array", "items": { "type": "string" } },
+    "allowed_data": { "type": "array", "items": { "type": "string" } },
+    "denied_data": { "type": "array", "items": { "type": "string" } },
+    "redacted_data": { "type": "array", "items": { "type": "string" } },
+    "allowed_memory": { "type": "array", "items": { "type": "string" } },
+    "denied_memory": { "type": "array", "items": { "type": "string" } },
+    "time_window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "obligations": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "proof": {
+      "type": "object",
+      "required": ["signature", "signed_by", "signed_at", "policy_hash", "contract_hash"],
+      "properties": {
+        "signature": { "type": "string", "minLength": 1 },
+        "signed_by": { "type": "string", "minLength": 1 },
+        "signed_at": { "type": "string", "format": "date-time" },
+        "policy_hash": { "type": "string", "minLength": 1 },
+        "contract_hash": { "type": "string", "minLength": 1 },
+        "algorithm": { "type": "string" },
+        "key_id": { "type": "string" },
+        "packet_hash": { "type": "string" },
+        "nonce": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
