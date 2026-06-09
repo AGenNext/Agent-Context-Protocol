@@ -1,0 +1,57 @@
+context_id: ctx_deny_001
+packet_type: signed_jit_context_packet
+actor: user_123
+agent: agent_support_001
+tenant: tenant_acme
+contract: contract_support_ops
+intent: intent_customer_support
+action: export_customer_data
+target: customer_456
+
+allowed_actions: []
+denied_actions:
+  - export_customer_data
+
+allowed_tools: []
+denied_tools:
+  - billing_admin
+  - customer_exporter
+
+allowed_data: []
+denied_data:
+  - customer_456.full_profile
+  - customer_456.payment_method
+  - customer_456.billing_history
+redacted_data:
+  - customer_456.payment_method
+  - customer_456.billing_history
+
+allowed_memory: []
+denied_memory:
+  - memory/full_customer_history
+  - memory/payment_preferences
+
+time_window:
+  start: "2026-06-09T00:00:00Z"
+  end: "2026-06-09T00:05:00Z"
+
+obligations:
+  - audit_required
+  - no_reuse
+  - no_export_without_policy
+  - expire_after_action
+
+proof:
+  algorithm: Ed25519
+  key_id: context-authority-key-2026-01
+  signature: sig_deny_example
+  signed_by: context_authority_default
+  signed_at: "2026-06-09T00:00:00Z"
+  policy_hash: sha256:policy_deny
+  contract_hash: sha256:contract_support_ops
+  packet_hash: sha256:packet_deny
+  nonce: nonce_deny_001
+
+decision:
+  result: deny
+  reason: policy_denied_export_customer_data
