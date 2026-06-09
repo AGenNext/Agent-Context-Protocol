@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Context Protocol (ACP) — Draft v0.1</title>
+  <meta name="description" content="Agent Context Protocol (ACP) defines governed, scoped, signed, just-in-time context packets for safe agent execution." />
+  <meta property="og:title" content="Agent Context Protocol (ACP) — Draft v0.1" />
+  <meta property="og:description" content="Governed, signed, scoped, just-in-time context delivery for agents." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --ink: #111827;
+      --muted: #4b5563;
+      --blue: #0f62fe;
+      --blue-dark: #054ada;
+      --card: #ffffff;
+      --border: #dbe3ef;
+      --soft: #eef4ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, IBM Plex Sans, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 28px; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: center;
+      padding: 18px 0 44px;
+    }
+    .brand { font-weight: 800; letter-spacing: -0.03em; font-size: 20px; }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
+    .hero {
+      padding: 72px 0 56px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      background: var(--soft);
+      color: var(--blue-dark);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 0.96;
+      letter-spacing: -0.07em;
+      margin: 0 0 22px;
+    }
+    .lead { font-size: 21px; color: var(--muted); max-width: 760px; margin: 0 0 28px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--blue);
+      font-weight: 700;
+    }
+    .btn.primary { background: var(--blue); color: #fff; }
+    .btn.secondary { background: #fff; color: var(--blue); }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 24px 60px rgba(15, 98, 254, 0.08);
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-size: 13px;
+      color: #1f2937;
+    }
+    section { padding: 34px 0; }
+    h2 { font-size: 34px; letter-spacing: -0.04em; margin: 0 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .card h3 { margin-top: 0; font-size: 18px; }
+    .muted { color: var(--muted); }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .step {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      font-weight: 700;
+      min-height: 92px;
+    }
+    footer {
+      padding: 46px 0 28px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 42px;
+    }
+    @media (max-width: 880px) {
+      .hero { grid-template-columns: 1fr; padding-top: 32px; }
+      .grid { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      header { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Agent Context Protocol</div>
+      <nav>
+        <a href="../SPEC.md">Spec</a>
+        <a href="../CONFORMANCE.md">Conformance</a>
+        <a href="../RFC/0001-core-protocol.md">RFCs</a>
+        <a href="../SECURITY.md">Security</a>
+        <a href="https://github.com/AGenNext/Agent-Context-Protocol">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Draft v0.1 · Request for Comments</span>
+          <h1>Governed context for agent execution.</h1>
+          <p class="lead">ACP defines how context is requested, authorized, scoped, signed, delivered, expired, and audited for agent actions.</p>
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/AGenNext/Agent-Context-Protocol">View on GitHub</a>
+            <a class="btn secondary" href="../SPEC.md">Read the Spec</a>
+          </div>
+        </div>
+        <div class="panel" aria-label="ACP packet preview">
+          <pre>type: acp.signed_jit_context_packet
+version: "0.1"
+actor: verified
+agent: verified
+contract: verified
+policy: evaluated
+scope: tenant + target + tools
+expires_at: required
+proof: signed</pre>
+        </div>
+      </section>
+
+      <section>
+        <h2>Core rule</h2>
+        <p class="lead">No identity. No contract. No policy. No scoped context.</p>
+      </section>
+
+      <section>
+        <h2>Why ACP exists</h2>
+        <div class="grid">
+          <div class="card"><h3>Least context</h3><p class="muted">Agents receive only the context required for a declared action, not broad memory dumps or tenant-wide data.</p></div>
+          <div class="card"><h3>Runtime governance</h3><p class="muted">Context is bound to identity, contract, policy, tool scope, data scope, expiry, and audit obligations.</p></div>
+          <div class="card"><h3>Trust evidence</h3><p class="muted">Signed packets create evidence that context was authorized, scoped, delivered, and used under policy.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Protocol flow</h2>
+        <div class="flow">
+          <div class="step">1. Verify identity</div>
+          <div class="step">2. Verify contract</div>
+          <div class="step">3. Evaluate policy</div>
+          <div class="step">4. Issue signed packet</div>
+          <div class="step">5. Expire and audit</div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Draft v0.1 includes</h2>
+        <div class="grid">
+          <div class="card"><h3>Specification</h3><p class="muted">Core model, request shape, packet shape, expiry rules, audit requirements, and invariants.</p></div>
+          <div class="card"><h3>RFC series</h3><p class="muted">Core protocol, context packet, policy model, trust model, and federation model.</p></div>
+          <div class="card"><h3>Conformance</h3><p class="muted">Observable behavior requirements for ACP-compatible implementations.</p></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>ACP Draft v0.1 is an open review draft by AGenNext. It is not yet a final standard.</p>
+    </footer>
+  </div>
+</body>
+</html>
