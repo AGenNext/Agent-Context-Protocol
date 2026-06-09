@@ -1,0 +1,53 @@
+context_id: ctx_allow_001
+packet_type: signed_jit_context_packet
+actor: user_123
+agent: agent_support_001
+tenant: tenant_acme
+contract: contract_support_ops
+intent: intent_customer_support
+action: summarize_ticket
+target: ticket_456
+
+allowed_actions:
+  - summarize_ticket
+denied_actions:
+  - export_customer_data
+
+allowed_tools:
+  - ticket_reader
+denied_tools:
+  - billing_admin
+
+allowed_data:
+  - ticket_456.subject
+  - ticket_456.body
+denied_data:
+  - ticket_456.payment_method
+redacted_data:
+  - ticket_456.payment_method
+
+allowed_memory:
+  - memory/customer_preferences/scoped_summary
+denied_memory:
+  - memory/full_customer_history
+
+time_window:
+  start: "2026-06-09T00:00:00Z"
+  end: "2026-06-09T00:05:00Z"
+
+obligations:
+  - audit_required
+  - no_reuse
+  - expire_after_action
+  - preserve_provenance
+
+proof:
+  algorithm: Ed25519
+  key_id: context-authority-key-2026-01
+  signature: sig_allow_example
+  signed_by: context_authority_default
+  signed_at: "2026-06-09T00:00:00Z"
+  policy_hash: sha256:policy_allow
+  contract_hash: sha256:contract_support_ops
+  packet_hash: sha256:packet_allow
+  nonce: nonce_allow_001
