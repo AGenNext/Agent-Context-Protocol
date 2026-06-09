@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AGenNext/Agent-Context-Protocol/schemas/audit-event.schema.json",
+  "title": "ACP Audit Event",
+  "type": "object",
+  "required": [
+    "audit_id",
+    "context_id",
+    "event_type",
+    "actor",
+    "agent",
+    "tenant",
+    "contract",
+    "action",
+    "target",
+    "decision",
+    "reason",
+    "timestamp"
+  ],
+  "properties": {
+    "audit_id": { "type": "string", "minLength": 1 },
+    "context_id": { "type": "string", "minLength": 1 },
+    "event_type": { "type": "string", "minLength": 1 },
+    "actor": { "type": "string", "minLength": 1 },
+    "agent": { "type": "string", "minLength": 1 },
+    "tenant": { "type": "string", "minLength": 1 },
+    "contract": { "type": "string", "minLength": 1 },
+    "action": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "decision": {
+      "type": "string",
+      "enum": ["allow", "deny", "redact", "expire", "revoke", "audit"]
+    },
+    "reason": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "policy_hash": { "type": "string" },
+        "contract_hash": { "type": "string" },
+        "packet_hash": { "type": "string" },
+        "rule_ids": { "type": "array", "items": { "type": "string" } },
+        "obligations": { "type": "array", "items": { "type": "string" } },
+        "redactions": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
