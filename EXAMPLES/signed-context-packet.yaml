@@ -1,0 +1,57 @@
+type: acp.signed_jit_context_packet
+version: "0.1"
+packet_id: pkt_customer_support_001
+request_id: req_customer_support_001
+issued_at: "2026-06-09T00:00:00Z"
+expires_at: "2026-06-09T00:15:00Z"
+actor:
+  id: did:example:person:chinmay
+  type: human
+agent:
+  id: did:example:agent:support-agent
+  runtime: agenext-agent-runtime
+contract:
+  id: contract_customer_support_v1
+  version: 1
+scope:
+  tenant_id: tenant_acme
+  action: read
+  target:
+    resource_type: customer_ticket
+    resource_id: ticket_123
+  data:
+    allowed:
+      - ticket.summary
+      - ticket.history.redacted
+      - customer.plan
+    denied:
+      - customer.payment_card
+      - customer.secret_notes
+  tools:
+    allowed:
+      - search_knowledge_base
+    denied:
+      - refund_payment
+  memory:
+    allowed:
+      - customer_preferences.redacted
+    denied:
+      - private_user_memory
+obligations:
+  audit: required
+  redaction: required
+  approval: not_required
+  retention: ephemeral
+context:
+  records:
+    - id: ticket_123
+      type: customer_ticket
+      summary: Customer asks about deployment status.
+      history:
+        redacted: true
+        entries:
+          - Agent provided deployment checklist.
+proof:
+  alg: EdDSA
+  kid: did:example:resolver:key-1
+  signature: placeholder_signature_for_draft_v0_1
