@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AGenNext/Agent-Context-Protocol/schemas/context-request.schema.json",
+  "title": "ACP Context Request",
+  "type": "object",
+  "required": [
+    "actor",
+    "agent",
+    "tenant",
+    "intent",
+    "contract",
+    "action",
+    "target",
+    "time_window"
+  ],
+  "properties": {
+    "actor": { "type": "string", "minLength": 1 },
+    "agent": { "type": "string", "minLength": 1 },
+    "tenant": { "type": "string", "minLength": 1 },
+    "intent": { "type": "string", "minLength": 1 },
+    "contract": { "type": "string", "minLength": 1 },
+    "action": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string" },
+    "requested_tools": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requested_data": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requested_memory": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requested_knowledge": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "time_window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
