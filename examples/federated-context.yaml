@@ -1,0 +1,82 @@
+context_id: ctx_federated_001
+packet_type: signed_jit_context_packet
+actor: user_123
+agent: agent_partner_ops_001
+tenant: tenant_partner_b
+contract: federation_contract_acme_partner_b
+intent: intent_partner_support
+action: summarize_shared_ticket
+target: shared_ticket_789
+
+federation:
+  federation_id: fed_acme_partner_b_001
+  source_tenant: tenant_acme
+  destination_tenant: tenant_partner_b
+  federation_policy: policy_federated_support
+  federation_contract: federation_contract_acme_partner_b
+
+allowed_actions:
+  - summarize_shared_ticket
+denied_actions:
+  - export_customer_data
+  - update_billing_record
+
+allowed_tools:
+  - shared_ticket_reader
+denied_tools:
+  - billing_admin
+  - customer_exporter
+
+allowed_data:
+  - shared_ticket_789.subject
+  - shared_ticket_789.body
+  - shared_ticket_789.status
+denied_data:
+  - shared_ticket_789.payment_method
+  - shared_ticket_789.private_internal_notes
+redacted_data:
+  - shared_ticket_789.payment_method
+  - shared_ticket_789.private_internal_notes
+
+allowed_memory:
+  - memory/shared_support_summary
+denied_memory:
+  - memory/full_customer_history
+  - memory/internal_account_risk
+
+time_window:
+  start: "2026-06-09T00:00:00Z"
+  end: "2026-06-09T00:05:00Z"
+
+obligations:
+  - audit_required
+  - no_reuse
+  - expire_after_action
+  - preserve_provenance
+  - no_export_without_policy
+
+provenance:
+  sources:
+    - source_id: shared_ticket_789
+      source_type: data
+      tenant: tenant_acme
+      version: v1
+      hash: sha256:source_ticket
+      accessed_at: "2026-06-09T00:00:00Z"
+  redactions:
+    - redaction_id: redact_payment_method
+      source_ref: shared_ticket_789
+      field_ref: payment_method
+      reason: policy_denied
+      rule_id: rule_no_payment_export
+
+proof:
+  algorithm: Ed25519
+  key_id: context-authority-key-2026-01
+  signature: sig_federated_example
+  signed_by: context_authority_default
+  signed_at: "2026-06-09T00:00:00Z"
+  policy_hash: sha256:policy_federated_support
+  contract_hash: sha256:federation_contract_acme_partner_b
+  packet_hash: sha256:packet_federated
+  nonce: nonce_federated_001
