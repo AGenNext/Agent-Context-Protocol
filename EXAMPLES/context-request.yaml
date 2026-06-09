@@ -1,0 +1,30 @@
+type: acp.context_request
+version: "0.1"
+request_id: req_customer_support_001
+actor:
+  id: did:example:person:chinmay
+  type: human
+agent:
+  id: did:example:agent:support-agent
+  runtime: agenext-agent-runtime
+intent: answer_customer_question
+action: read
+contract:
+  id: contract_customer_support_v1
+  version: 1
+target:
+  tenant_id: tenant_acme
+  resource_type: customer_ticket
+  resource_id: ticket_123
+scope_request:
+  data:
+    - ticket.summary
+    - ticket.history
+    - customer.plan
+  tools:
+    - search_knowledge_base
+  memory:
+    - customer_preferences
+  time_window:
+    from: "2026-06-01T00:00:00Z"
+    to: "2026-06-09T00:00:00Z"
