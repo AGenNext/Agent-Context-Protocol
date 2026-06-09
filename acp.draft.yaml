@@ -1,0 +1,144 @@
+apiVersion: fabric.openautonomyx.io/v1alpha1
+kind: AgentContextProtocol
+
+metadata:
+  name: canonical-agent-context-protocol
+  shortName: ACP
+  status: draft
+  version: 0.1.0
+
+spec:
+  purpose:
+    - assemble only the context required for a specific agent action
+    - bind context to identity, policy, contract, target, time, and tool scope
+    - prevent static, excessive, stale, reusable, or unauthorized context
+    - produce a signed just-in-time context packet
+
+  context_request:
+    required:
+      actor: identity
+      agent: agent_id
+      intent: intent_id
+      contract: contract_id
+      action: action_id
+      target: resource_id
+      time_window: jit_window
+      tenant: tenant_id
+
+    optional:
+      reason: string
+      requested_tools: []
+      requested_data: []
+      requested_memory: []
+      requested_knowledge: []
+
+  context_sources:
+    required:
+      - identity_graph
+      - authorization_graph
+      - policy_store
+      - contract_store
+      - audit_log
+
+    conditional:
+      - memory_store
+      - knowledge_graph
+      - tool_registry
+      - secret_store
+      - data_catalog
+      - consent_store
+
+  resolution_order:
+    - verify_actor
+    - verify_agent
+    - verify_tenant
+    - verify_contract
+    - check_policy
+    - resolve_permissions
+    - resolve_target_scope
+    - resolve_data_scope
+    - resolve_memory_scope
+    - resolve_tool_scope
+    - apply_redactions
+    - assemble_context
+    - attach_obligations
+    - sign_context
+    - execute_with_context
+    - expire_context
+    - audit_context_use
+
+  context_packet:
+    required:
+      context_id: string
+      packet_type: signed_jit_context_packet
+      actor: identity
+      agent: agent_id
+      tenant: tenant_id
+      contract: contract_id
+      intent: intent_id
+      action: action_id
+      target: resource_id
+
+      allowed_actions: []
+      denied_actions: []
+
+      allowed_tools: []
+      denied_tools: []
+
+      allowed_data: []
+      denied_data: []
+      redacted_data: []
+
+      allowed_memory: []
+      denied_memory: []
+
+      time_window:
+        start: datetime
+        end: datetime
+
+      obligations:
+        - audit_required
+        - no_reuse
+        - no_export_without_policy
+        - expire_after_action
+        - preserve_provenance
+        - explain_context_sources
+
+      proof:
+        signature: string
+        signed_by: context_authority
+        signed_at: datetime
+        policy_hash: string
+        contract_hash: string
+
+  invariants:
+    - no_context_without_identity
+    - no_context_without_agent
+    - no_context_without_tenant
+    - no_context_without_contract
+    - no_context_without_policy
+    - no_context_without_target_scope
+    - no_tool_context_without_scope
+    - no_memory_context_without_permission
+    - no_secret_context_without_policy
+    - no_cross_tenant_context
+    - no_context_reuse_after_expiry
+    - no_unsigned_context_packet
+    - no_execution_without_audit_trail
+
+  failure_modes:
+    - identity_verification_failed
+    - agent_verification_failed
+    - tenant_boundary_violation
+    - contract_missing
+    - policy_denied
+    - target_scope_denied
+    - tool_scope_denied
+    - memory_scope_denied
+    - data_redaction_required
+    - context_expired
+    - signature_invalid
+    - audit_write_failed
+
+  output:
+    type: signed_jit_context_packet
